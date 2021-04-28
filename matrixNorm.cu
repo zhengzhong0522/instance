@@ -50,7 +50,7 @@ __global__ void matrixNorm(float *d_a, float *d_b, int n) {
     // make sure the calculation of standard deviation is completed
     __syncthreads();
 
-    sigma = sqrt(sigma);
+    sigma = sqrt(float(sigma));
 
     for(row=0;row<n;row++){
         if(sigma==0.0)
