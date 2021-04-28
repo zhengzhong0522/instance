@@ -138,6 +138,7 @@ int main(int argc, char **argv) {
         free(B);
        cudaFree(d_A);
        cudaFree(d_B);
+       print_output();
     
     exit(0);
 }
