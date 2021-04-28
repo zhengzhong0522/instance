@@ -66,7 +66,7 @@ void print_output(){
     int r,c;
     for(r=0;r<N;r++){
         for(c=0;c<N;c++){
-            printf("%5.2f%s", B[row*N+c], (c < N-1) ? ", " : ";\n\t");
+            printf("%5.2f%s", B[r*N+c], (c < N-1) ? ", " : ";\n\t");
         }
     }
 }
