@@ -81,20 +81,11 @@ int main(int argc, char **argv) {
     cudaMalloc((void**)&d_A, 4*N*N);
     cudaMalloc((void**)&d_B, 4*N*N);
 
-    
-    // copy the host data to device
-    cudaMemcpy((void*)d_A, (void*)A, 4*N*N, cudaMemcpyHostToDevice);
-    cudaMemcpy((void*)d_B, (void*)B, 4*N*N, cudaMemcpyHostToDevice);
-    
-    // set up dimension of grid and block, 1-dim gird and block
-    dim3 blockSize(32);
-    dim3 gridSize((N+blockSize.x - 1) / blockSize.x);
-
-    /* Start Clock */
     printf("\n---------------------------------------------\n");
     printf("Matrix size N = %d", N);
     printf("\nStarting clock.\n\n");
 
+        /* Start Clock */
 
     // some events to count the execution time
     cudaEvent_t start, stop;
@@ -105,6 +96,16 @@ int main(int argc, char **argv) {
     // start to count execution time of GPU version
     cudaEventRecord(start,0);
     
+    
+    // copy the host data to device
+    cudaMemcpy((void*)d_A, (void*)A, 4*N*N, cudaMemcpyHostToDevice);
+    cudaMemcpy((void*)d_B, (void*)B, 4*N*N, cudaMemcpyHostToDevice);
+    
+    // set up dimension of grid and block, 1-dim gird and block
+    dim3 blockSize(32);
+    dim3 gridSize((N+blockSize.x - 1) / blockSize.x);
+
+
     
     /* Matrix Normalization */
     
