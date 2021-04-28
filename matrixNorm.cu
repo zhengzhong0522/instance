@@ -155,7 +155,7 @@ int main(int argc, char **argv) {
     
     // set up dimension of grid and block, 1-dim gird and block
     dim3 blockSize(16);
-    dim3 gridSize(ceil(N/((float) blockSize.x));
+    dim3 gridSize(ceil(N/((float) blockSize.x)));
 
 
     
