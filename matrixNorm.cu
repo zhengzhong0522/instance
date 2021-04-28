@@ -62,6 +62,15 @@ __global__ void matrixNorm(float *d_a, float *d_b, int n) {
 
 } 
 
+void print_output(){
+    int r,c;
+    for(r=0;r<N;r++){
+        for(c=0;c<N;c++){
+            printf("%5.2f%s", B[row*N+c], (c < N-1) ? ", " : ";\n\t");
+        }
+    }
+}
+
 
 int main(int argc, char **argv) {
     
