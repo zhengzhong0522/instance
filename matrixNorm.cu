@@ -102,7 +102,7 @@ int main(int argc, char **argv) {
 
 
     // start to count execution time of GPU version
-    cudaEventRecord(start);
+    cudaEventRecord(start,0);
     
     
     /* Matrix Normalization */
@@ -111,17 +111,10 @@ int main(int argc, char **argv) {
     
     // transfer result from device
     cudaMemcpy(B, d_B, sizeof(float)*N*N, cudaMemcpyDeviceToHost);
-    cudaEventRecord(stop);
+    cudaEventRecord(stop,0);
 
-    // // free both host and device memory
-     free(A);
-     free(B);
-    cudaFree(d_A);
-    cudaFree(d_B);
+
     
-
-    cudaDeviceSynchronize();
-    // time counting terminate
     
     cudaEventSynchronize(stop);
 
@@ -131,6 +124,12 @@ int main(int argc, char **argv) {
     printf("Time elapsed on GPU: %f ms.\n\n", gpu_elapsed_time_ms);
     printf("\nStopped clock.");
     printf("\n---------------------------------------------\n");
+
+        // // free both host and device memory
+        free(A);
+        free(B);
+       cudaFree(d_A);
+       cudaFree(d_B);
     
     exit(0);
 }
