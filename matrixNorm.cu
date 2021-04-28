@@ -29,42 +29,6 @@ void initialize_inputs() {
 }
 
 
-/* device function */
-
-
-__global__ void matrixNorm(float *d_a, float *d_b, int n) {
-    //printf("hello\n");
-    // get thread id(col) in the grid
-    int col = blockIdx.x * blockDim.x + threadIdx.x;
-    int mu, sigma, row;
-    mu = 0.0;
-    for(row=0;row<n;row++){
-        mu += d_a[row*n + col];
-    }
-    mu /= n;
-
-    // make sure the calculation of mean is completed
-    __syncthreads();
-
-    sigma = 0.0;
-    for (row=0; row < n; row++){
-        sigma += powf(d_a[row*n+col] - mu, 2.0);
-    }   
-        sigma /= n;
-    // make sure the calculation of standard deviation is completed
-    __syncthreads();
-
-    sigma = sqrt(float(sigma));
-
-    for(row=0;row<n;row++){
-        if(sigma==0.0)
-            d_b[row*n+col]=0.0;
-        else
-        d_b[row*n+col] = (d_a[row*n+col] - mu) / sigma;
-    }
-
-} 
-
 void print_output(){
     int r,c;
     printf("\nB =\n");
@@ -107,6 +71,44 @@ void matrixNorm() {
     
 }
 
+
+/* device function */
+
+
+__global__ void matrixNorm(float *d_a, float *d_b, int n) {
+
+    // get thread id(col) in the grid
+    int col = blockIdx.x * blockDim.x + threadIdx.x;
+    int mu, sigma, row;
+    mu = 0.0;
+    for(row=0;row<n;row++){
+        mu += d_a[row*n + col];
+    }
+    mu /= n;
+
+    // make sure the calculation of mean is completed
+    __syncthreads();
+
+    sigma = 0.0;
+    for (row=0; row < n; row++){
+        sigma += powf(d_a[row*n+col] - mu, 2.0);
+    }   
+        sigma /= n;
+    // make sure the calculation of standard deviation is completed
+    __syncthreads();
+
+    sigma = sqrt(float(sigma));
+
+    for(row=0;row<n;row++){
+        if(sigma==0.0)
+            d_b[row*n+col]=0.0;
+        else
+        d_b[row*n+col] = (d_a[row*n+col] - mu) / sigma;
+    }
+
+} 
+
+
 int main(int argc, char **argv) {
     
     N = atoi(argv[1]);
@@ -147,7 +149,7 @@ int main(int argc, char **argv) {
     
     // set up dimension of grid and block, 1-dim gird and block
     dim3 blockSize(32);
-    dim3 gridSize((N+blockSize.x - 1) / blockSize.x);
+    dim3 gridSize(cell(N / blockSize.x);
 
 
     
