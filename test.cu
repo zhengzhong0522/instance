@@ -141,7 +141,7 @@ __global__ void normCalc (float *d_A, float *d_B, int n) {
 
         __syncthreads();
 
-        sigma = sqrt(sigma);
+        sigma = sqrt(float(sigma));
 
         for (row=0; row < n; row++) {
             if (sigma == (float)0.0)
