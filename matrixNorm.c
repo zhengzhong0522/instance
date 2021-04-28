@@ -31,8 +31,9 @@ void initialize_inputs() {
 
 void print_output(){
     printf("\nA =\n\t");
-    for(int row=0;row<N;row++){
-        for(int c=0;c<N;c++){
+    int row, c;
+    for(row=0;row<N;row++){
+        for(c=0;c<N;c++){
              printf("%5.2f%s", B[row][c], (c < N-1) ? ", " : ";\n\t");
         }
     }
