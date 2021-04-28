@@ -64,7 +64,7 @@ __global__ void matrixNorm(float *d_a, float *d_b, int n) {
 
 int main(int argc, char **argv) {
     
-    //N = atoi(argv[1]);
+    N = atoi(argv[1]);
 
     /* Initialize A and B */
     
@@ -93,41 +93,41 @@ int main(int argc, char **argv) {
     printf("\n---------------------------------------------\n");
     printf("Matrix size N = %d", N);
     printf("\nStarting clock.\n\n");
-    //float gpu_elapsed_time_ms;
+    float gpu_elapsed_time_ms;
 
     // some events to count the execution time
-    //cudaEvent_t start, stop;
-    //cudaEventCreate(&start);
-    //cudaEventCreate(&stop);
+    cudaEvent_t start, stop;
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
 
     // start to count execution time of GPU version
-    //cudaEventRecord(start, 0);
+    cudaEventRecord(start, 0);
     
     
     /* Matrix Normalization */
     
-    //matrixNorm<<<gridSize,blockSize>>>(d_A, d_B, N);
+    matrixNorm<<<gridSize,blockSize>>>(d_A, d_B, N);
     
     // transfer result from device
-    // cudaMemcpy(B, d_B, sizeof(float)*N*N, cudaMemcpyDeviceToHost);
+    cudaMemcpy(B, d_B, sizeof(float)*N*N, cudaMemcpyDeviceToHost);
 
     // // free both host and device memory
      free(A);
      free(B);
-    // cudaFree(d_A);
-    // cudaFree(d_B);
+    cudaFree(d_A);
+    cudaFree(d_B);
     
-    // /* Stop Clock */
-    // cudaDeviceSynchronize();
-    // // time counting terminate
-    // cudaEventRecord(stop, 0);
-    // cudaEventSynchronize(stop);
+    /* Stop Clock */
+    cudaDeviceSynchronize();
+    // time counting terminate
+    cudaEventRecord(stop, 0);
+    cudaEventSynchronize(stop);
 
-    // // compute time elapse on GPU computing
-    // cudaEventElapsedTime(&gpu_elapsed_time_ms, start, stop);
-    // printf("Time elapsed on GPU: %f ms.\n\n", gpu_elapsed_time_ms);
-    // printf("\nStopped clock.");
-    // printf("\n---------------------------------------------\n");
+    // compute time elapse on GPU computing
+    cudaEventElapsedTime(&gpu_elapsed_time_ms, start, stop);
+    printf("Time elapsed on GPU: %f ms.\n\n", gpu_elapsed_time_ms);
+    printf("\nStopped clock.");
+    printf("\n---------------------------------------------\n");
     
     exit(0);
 }
