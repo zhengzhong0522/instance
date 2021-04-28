@@ -30,6 +30,7 @@ void initialize_inputs() {
 
 
 __global__ void matrixNorm(float *d_a, float *d_b, int n) {
+    printf("hello\n");
     // get thread id(col) in the grid
     int col = blockIdx.x * blockDim.x + threadIdx.x;
     int mu, sigma, row;
@@ -112,9 +113,6 @@ int main(int argc, char **argv) {
     // transfer result from device
     cudaMemcpy(B, d_B, sizeof(float)*N*N, cudaMemcpyDeviceToHost);
     cudaEventRecord(stop,0);
-
-
-    
     
     cudaEventSynchronize(stop);
 
