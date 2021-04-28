@@ -6,9 +6,10 @@
 
 /* Program Parameters */
 int N = 6000;
-
+#define MAXN 6000
 /* Matrices */
 float *A, *B;
+volatile float AA[MAXN][MAXN], BB[MAXN][MAXN];
 
 
 /* Initialize A and B*/
@@ -20,6 +21,8 @@ void initialize_inputs() {
         for (col = 0; col < N; col++) {
             A[row*N+col] = (float)rand() / 32768.0;
             B[row*N+col] = 0.0;
+            AA[row][col] = A[row*N+col];
+            BB[row][col] = 0.0;
         }
     }
     
@@ -64,13 +67,47 @@ __global__ void matrixNorm(float *d_a, float *d_b, int n) {
 
 void print_output(){
     int r,c;
+    printf("\nB =\n");
     for(r=0;r<N;r++){
         for(c=0;c<N;c++){
             printf("%5.2f%s", B[r*N+c], (c < N-1) ? ", " : ";\n");
         }
     }
 }
-
+void print_output2(){
+    printf("\nBB =\n");
+    int row, c;
+    for(row=0;row<N;row++){
+        for(c=0;c<N;c++){
+             printf("%5.2f%s", B[row][c], (c < N-1) ? ", " : ";\n");
+        }
+    }
+}
+void matrixNorm() {
+    int row, col;
+    float mu, sigma; // Mean and Standard Deviation
+    
+    printf("Computing Serially.\n");
+    
+    for (col=0; col < N; col++) {
+        mu = 0.0;
+        for (row=0; row < N; row++)
+            mu += AA[row][col];
+        mu /= (float) N;
+        sigma = 0.0;
+        for (row=0; row < N; row++)
+            sigma += powf(AA[row][col] - mu, 2.0);
+        sigma /= (float) N;
+        sigma = sqrt(sigma);
+        for (row=0; row < N; row++) {
+            if (sigma == 0.0)
+                BB[row][col] = 0.0;
+            else
+                BB[row][col] = (AA[row][col] - mu) / sigma;
+        }
+    }
+    
+}
 
 int main(int argc, char **argv) {
     
@@ -139,6 +176,9 @@ int main(int argc, char **argv) {
        cudaFree(d_A);
        cudaFree(d_B);
        print_output();
+
+       matrixNorm();
+       print_output2();
     
     exit(0);
 }
