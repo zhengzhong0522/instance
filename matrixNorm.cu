@@ -80,7 +80,7 @@ __global__ void matrixNorm(float *d_a, float *d_b, int n) {
     // get thread id(col) in the grid
     int col = blockIdx.x * blockDim.x + threadIdx.x;
     if(col > n-1)
-        exit();
+        exit(0);
     printf("id:%d/n",col);
     int mu, sigma, row;
     mu = 0.0;
