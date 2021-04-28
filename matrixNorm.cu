@@ -195,7 +195,7 @@ int main(int argc, char **argv) {
     
     /* Stop Clock */
     gettimeofday(&stop2, &tzdummy);
-    runtime2 = (unsigned long long)(stop.tv_sec - start.tv_sec) * 1000000 + (stop.tv_usec - start.tv_usec);
+    runtime2 = (unsigned long long)(stop2.tv_sec - start2.tv_sec) * 1000000 + (stop2.tv_usec - start2.tv_usec);
     
     
     /* Display timing results */
