@@ -30,7 +30,7 @@ void initialize_inputs() {
 
 
 __global__ void matrixNorm(float *d_a, float *d_b, int n) {
-    printf("hello\n");
+    //printf("hello\n");
     // get thread id(col) in the grid
     int col = blockIdx.x * blockDim.x + threadIdx.x;
     int mu, sigma, row;
