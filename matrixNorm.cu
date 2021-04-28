@@ -126,7 +126,7 @@ int main(int argc, char **argv) {
     cudaEventSynchronize(stop);
 
     // compute time elapse on GPU computing
-    float gpu_elapsed_time_ms = 0.0
+    float gpu_elapsed_time_ms = 0.2;
     cudaEventElapsedTime(&gpu_elapsed_time_ms, start, stop);
     printf("Time elapsed on GPU: %f ms.\n\n", gpu_elapsed_time_ms);
     printf("\nStopped clock.");
