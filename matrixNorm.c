@@ -30,7 +30,7 @@ void initialize_inputs() {
 }
 
 void print_output(){
-    printf("\nA =\n\t");
+    printf("\nB =\n\t");
     int row, c;
     for(row=0;row<N;row++){
         for(c=0;c<N;c++){
