@@ -110,9 +110,6 @@ void matrixNorm() {
 }
 
 int main(int argc, char **argv) {
-    struct timeval start, stop;  /* Elapsed times using gettimeofday() */
-    struct timezone tzdummy;
-    unsigned long long runtime;
     
     N = atoi(argv[1]);
 
@@ -180,11 +177,16 @@ int main(int argc, char **argv) {
        cudaFree(d_B);
        //print_output();
        
+
+    // cpu serial computing
+    struct timeval start2, stop2;  /* Elapsed times using gettimeofday() */
+    struct timezone tzdummy;
+    unsigned long long runtime2;
        /* Start Clock */
     printf("\n---------------------------------------------\n");
     printf("Matrix size N = %d", N);
     printf("\nStarting clock.\n\n");
-    gettimeofday(&start, &tzdummy);
+    gettimeofday(&start2, &tzdummy);
     
     
     /* Matrix Normalization */
@@ -192,12 +194,12 @@ int main(int argc, char **argv) {
     
     
     /* Stop Clock */
-    gettimeofday(&stop, &tzdummy);
-    runtime = (unsigned long long)(stop.tv_sec - start.tv_sec) * 1000000 + (stop.tv_usec - start.tv_usec);
+    gettimeofday(&stop2, &tzdummy);
+    runtime2 = (unsigned long long)(stop.tv_sec - start.tv_sec) * 1000000 + (stop.tv_usec - start.tv_usec);
     
     
     /* Display timing results */
-    printf("Runtime on CPU = %g ms.\n", (float)runtime/(float)1000);
+    printf("Runtime on CPU = %g ms.\n", (float)runtime2/(float)1000);
     printf("\nStopped clock.");
     printf("\n---------------------------------------------\n");
        //print_output2();
