@@ -18,8 +18,8 @@ void initialize_inputs() {
     srand((unsigned)time(NULL));
     for (row = 0; row < N; row++) {
         for (col = 0; col < N; col++) {
-            A[i*N+j] = (float)rand() / 32768.0;
-            B[i*N+j] = 0.0;
+            A[row*N+col] = (float)rand() / 32768.0;
+            B[row*N+col] = 0.0;
         }
     }
     
@@ -34,8 +34,8 @@ __global__ void matrixNorm(float *d_a, float *d_b, int n) {
     int col = blockIdx.x * blockDim.x + threadIdx.x;
     int mu, sigma, row;
     mu = 0.0;
-    for(row=0;row<n;r++){
-        mu += d_A[row*n + col]
+    for(row=0;row<n;row++){
+        mu += d_a[row*n + col];
     }
     mu /= n;
 
@@ -44,7 +44,7 @@ __global__ void matrixNorm(float *d_a, float *d_b, int n) {
 
     sigma = 0.0;
     for (row=0; row < n; row++){
-        sigma += powf(d_A[row*n+col] - mu, 2.0);
+        sigma += powf(d_a[row*n+col] - mu, 2.0);
     }   
         sigma /= n;
     // make sure the calculation of standard deviation is completed
@@ -54,19 +54,15 @@ __global__ void matrixNorm(float *d_a, float *d_b, int n) {
 
     for(row=0;r<n;r++){
         if(sigma==0.0)
-            d_B[row*n+col]=0.0;
+            d_b[row*n+col]=0.0;
         else
-        d_B[row*n+col] = (d_A[row*n+col] - mu) / sigma;
+        d_b[row*n+col] = (d_a[row*n+col] - mu) / sigma;
     }
 
 } 
 
 
 int main(int argc, char **argv) {
-    /* Timing variables */
-    struct timeval start, stop;  /* Elapsed times using gettimeofday() */
-    struct timezone tzdummy;
-    unsigned long long runtime;
     
     N = atoi(argv[1]);
 
