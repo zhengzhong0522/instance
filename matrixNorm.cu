@@ -64,7 +64,7 @@ __global__ void matrixNorm(float *d_a, float *d_b, int n) {
 
 int main(int argc, char **argv) {
     
-    N = atoi(argv[1]);
+    //N = atoi(argv[1]);
 
     /* Initialize A and B */
     
@@ -72,6 +72,7 @@ int main(int argc, char **argv) {
     A = (float*)malloc(4*N*N);
     B = (float*)malloc(4*N*N);
 
+    
     initialize_inputs();
 
     // allocate device memory
