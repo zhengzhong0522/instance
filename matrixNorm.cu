@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
     printf("\n---------------------------------------------\n");
     printf("Matrix size N = %d", N);
     printf("\nStarting clock.\n\n");
-  
+    float gpu_elapsed_time_ms;
 
     // some events to count the execution time
     cudaEvent_t start, stop;
