@@ -9,10 +9,10 @@
 #include <math.h>
 
 /* Program Parameters */
-#define N 6000  /* Matrix size */
+int N;  /* Matrix size */
 
 /* Matrices */
-volatile float A[N][N], B[N][N];
+volatile float A[6000][6000], B[6000][6000];
 
 
 /* Initialize A and B*/
@@ -61,6 +61,7 @@ void matrixNorm() {
 
 
 int main(int argc, char **argv) {
+    N = atoi(argv[1]);
     /* Timing variables */
     struct timeval start, stop;  /* Elapsed times using gettimeofday() */
     struct timezone tzdummy;
