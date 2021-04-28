@@ -34,7 +34,7 @@ void print_output(){
     int row, c;
     for(row=0;row<N;row++){
         for(c=0;c<N;c++){
-             printf("%5.2f%s", B[row][c], (c < N-1) ? ", " : ";\n\t");
+             printf("%5.2f%s", B[row][c], (c < N-1) ? ", " : ";\n");
         }
     }
 }
