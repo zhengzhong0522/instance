@@ -175,10 +175,29 @@ int main(int argc, char **argv) {
         free(B);
        cudaFree(d_A);
        cudaFree(d_B);
-       print_output();
-
-       matrixNorm();
-       print_output2();
+       //print_output();
+       
+       /* Start Clock */
+    printf("\n---------------------------------------------\n");
+    printf("Matrix size N = %d", N);
+    printf("\nStarting clock.\n\n");
+    gettimeofday(&start, &tzdummy);
+    
+    
+    /* Matrix Normalization */
+    matrixNorm();
+    
+    
+    /* Stop Clock */
+    gettimeofday(&stop, &tzdummy);
+    runtime = (unsigned long long)(stop.tv_sec - start.tv_sec) * 1000000 + (stop.tv_usec - start.tv_usec);
+    
+    
+    /* Display timing results */
+    printf("Runtime on CPU = %g ms.\n", (float)runtime/(float)1000);
+    printf("\nStopped clock.");
+    printf("\n---------------------------------------------\n");
+       //print_output2();
     
     exit(0);
 }
