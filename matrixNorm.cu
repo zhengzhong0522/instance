@@ -117,7 +117,7 @@ int main(int argc, char **argv) {
     cudaFree(d_B);
     
     /* Stop Clock */
-    cudaThreadSynchronize();
+    cudaDeviceSynchronize();
     // time counting terminate
     cudaEventRecord(stop, 0);
     cudaEventSynchronize(stop);
