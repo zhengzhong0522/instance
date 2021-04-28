@@ -52,7 +52,7 @@ __global__ void matrixNorm(float *d_a, float *d_b, int n) {
 
     sigma = sqrt(sigma);
 
-    for(row=0;r<n;r++){
+    for(row=0;row<n;row++){
         if(sigma==0.0)
             d_b[row*n+col]=0.0;
         else
@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
     printf("\n---------------------------------------------\n");
     printf("Matrix size N = %d", N);
     printf("\nStarting clock.\n\n");
-    float gpu_elapsed_time_ms, cpu_elapsed_time_ms;
+  
 
     // some events to count the execution time
     cudaEvent_t start, stop;
@@ -105,7 +105,7 @@ int main(int argc, char **argv) {
     
     /* Matrix Normalization */
     
-    matrixNorm<<<gridSize,blockSize>>>(d_A, d_B);
+    matrixNorm<<<gridSize,blockSize>>>(d_A, d_B, N);
     
     // transfer result from device
     cudaMemcpy(B, d_B, sizeof(float)*N*N, cudaMemcpyDeviceToHost);
