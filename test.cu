@@ -2,22 +2,15 @@
 #include <stdlib.h>
 #include <time.h>
 #include <sys/time.h>
-// #include <math.h>
+#include <math.h>
 
-__global__ void add(int a, int b, int *c)
-{
- *c = a + b;
+
+__global__ void cuda_hello(){
+    printf("Hello World from GPU!\n");
 }
-int main()
-{
-int a,b,c;
-int *dev_c;
-a=3;
-b=4;
-cudaMalloc((void**)&dev_c, sizeof(int));
-add<<<1,1>>>(a,b,dev_c);
-cudaMemcpy(&c, dev_c, sizeof(int), cudaMemcpyDeviceToHost);
-printf("%d + %d is %d\n", a, b, c);
-cudaFree(dev_c);
-return 0;
+
+int main() {
+    cuda_hello<<<1,1>>>(); 
+    printf("Hello World from CPU!\n");
+    return 0;
 }
