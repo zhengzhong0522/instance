@@ -10,9 +10,9 @@
 
 /* Program Parameters */
 int N;  /* Matrix size */
-
+#define MAXN 6000
 /* Matrices */
-volatile float A[6000*6000], B[6000*6000];
+volatile float A[MAXN][MAXN], B[MAXN][MAXN];
 
 
 /* Initialize A and B*/
@@ -22,8 +22,8 @@ void initialize_inputs() {
     srand((unsigned)time(NULL));
     for (row = 0; row < N; row++) {
         for (col = 0; col < N; col++) {
-            A[row*N+col] = (float)rand() / 32768.0;
-            B[row*N+col] = 0.0;
+            A[row][col] = (float)rand() / 32768.0;
+            B[row][col] = 0.0;
         }
     }
     
@@ -33,7 +33,7 @@ void print_output(){
     printf("\nA =\n\t");
     for(int row=0;row<N;row++){
         for(int c=0;c<N;c++){
-             printf("%5.2f%s", B[row*N+c], (c < N-1) ? ", " : ";\n\t");
+             printf("%5.2f%s", B[row][c], (c < N-1) ? ", " : ";\n\t");
         }
     }
 }
