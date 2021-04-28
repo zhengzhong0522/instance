@@ -110,6 +110,9 @@ void matrixNorm() {
 }
 
 int main(int argc, char **argv) {
+    struct timeval start, stop;  /* Elapsed times using gettimeofday() */
+    struct timezone tzdummy;
+    unsigned long long runtime;
     
     N = atoi(argv[1]);
 
