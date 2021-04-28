@@ -101,6 +101,7 @@ int main(int argc, char **argv) {
     printf("Runtime = %g ms.\n", (float)runtime/(float)1000);
     printf("\nStopped clock.");
     printf("\n---------------------------------------------\n");
+    print_output();
     
     exit(0);
 }
