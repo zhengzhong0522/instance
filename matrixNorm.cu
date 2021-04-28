@@ -149,7 +149,7 @@ int main(int argc, char **argv) {
     
     // set up dimension of grid and block, 1-dim gird and block
     dim3 blockSize(32);
-    dim3 gridSize(cell(N / blockSize.x);
+    dim3 gridSize(cell(N / blockSize.x));
 
 
     
