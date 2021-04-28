@@ -79,8 +79,9 @@ __global__ void matrixNorm(float *d_a, float *d_b, int n) {
 
     // get thread id(col) in the grid
     int col = blockIdx.x * blockDim.x + threadIdx.x;
-    if(col > n-1)
-        exit(0);
+    if(col < n) {
+
+        
     printf("id:%d/n",col);
     int mu, sigma, row;
     mu = 0.0;
@@ -108,6 +109,8 @@ __global__ void matrixNorm(float *d_a, float *d_b, int n) {
         else
         d_b[row*n+col] = (d_a[row*n+col] - mu) / sigma;
     }
+
+ }
 
 } 
 
@@ -151,8 +154,8 @@ int main(int argc, char **argv) {
     cudaMemcpy((void*)d_B, (void*)B, 4*N*N, cudaMemcpyHostToDevice);
     
     // set up dimension of grid and block, 1-dim gird and block
-    dim3 blockSize(32);
-    dim3 gridSize(1);
+    dim3 blockSize(16);
+    dim3 gridSize(ceil(N/((float) blockSize.x));
 
 
     
