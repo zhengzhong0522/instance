@@ -34,7 +34,7 @@ void print_output(){
     printf("\nB =\n");
     for(r=0;r<N;r++){
         for(c=0;c<N;c++){
-            printf("%5.5f%s", A[r*N+c], (c < N-1) ? ", " : ";\n");
+            printf("%5.5f%s", B[r*N+c], (c < N-1) ? ", " : ";\n");
         }
     }
 }
@@ -43,7 +43,7 @@ void print_output2(){
     int row, c;
     for(row=0;row<N;row++){
         for(c=0;c<N;c++){
-             printf("%5.5f%s", AA[row][c], (c < N-1) ? ", " : ";\n");
+             printf("%5.5f%s", BB[row][c], (c < N-1) ? ", " : ";\n");
         }
     }
 }
@@ -98,10 +98,11 @@ __global__ void matrixNorm(float *d_a, float *d_b, int n) {
         sigma += powf(d_a[row*n+col] - mu, 2.0);
     }   
         sigma /= n;
+        sigma = sqrt(float(sigma));
     // make sure the calculation of standard deviation is completed
     __syncthreads();
 
-    sigma = sqrt(float(sigma));
+    
 
     for(row=0;row<n;row++){
         if(sigma==0.0)
