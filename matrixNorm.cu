@@ -105,10 +105,14 @@ __global__ void matrixNorm(float *d_a, float *d_b, int n) {
     
 
     for(row=0;row<n;row++){
-        if(sigma==0.0)
-            d_b[row*n+col]=0.0;
-        else
-        d_b[row*n+col] = (d_a[row*n+col] - mu) / sigma;
+        int c;
+        for(c=0;c<n;c++){
+            if(sigma==0.0)
+                d_b[row*n+c]=0.0;
+            else
+                d_b[row*n+c] = (d_a[row*n+c] - mu) / sigma;
+        }
+        
     }
 
  }
