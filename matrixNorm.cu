@@ -86,7 +86,7 @@ __global__ void matrixNorm(float *d_a, float *d_b, int n) {
     extern __shared__ float sdata[];
     
     for(row=0;row<n;row++){
-        mu += d_a[row + col*n];
+        mu += d_a[row*n + col];
     }
     mu /= n;
 
@@ -95,7 +95,7 @@ __global__ void matrixNorm(float *d_a, float *d_b, int n) {
 
     sigma = 0.0;
     for (row=0; row < n; row++){
-        sigma += powf(d_a[row+col*n] - mu, 2.0);
+        sigma += powf(d_a[row*n+col] - mu, 2.0);
     }   
         sigma /= (float)n;
         sigma = sqrt(float(sigma));
@@ -108,7 +108,7 @@ __global__ void matrixNorm(float *d_a, float *d_b, int n) {
         if(sigma==0.0)
             d_b[row*n+col]=0.0;
         else
-        d_b[row*n+col] = (d_a[row+col*n] - mu) / sigma;
+        d_b[row*n+col] = (d_a[row*n+col] - mu) / sigma;
     }
 
 } 
