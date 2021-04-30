@@ -158,6 +158,43 @@ __global__ void matrixNorm(float *d_a, float *d_b, float* block_sum, float* col_
     
 
 } 
+__global__ void matrixNorm2(float *d_a, float *d_b, int n) {
+
+    // get thread id(col) in the global scope
+    int col = blockIdx.x * blockDim.x + threadIdx.x;
+    //printf("id:%d\n",col);
+    int mu, sigma, row;
+    mu = 0.0;
+    // each threads load one element from global to shared mem.
+    extern __shared__ float sdata[];
+    
+    for(row=0;row<n;row++){
+        mu += d_a[row*n + col];
+    }
+    mu /= n;
+
+    // make sure the calculation of mean is completed
+    __syncthreads();
+
+    sigma = 0.0;
+    for (row=0; row < n; row++){
+        sigma += powf(d_a[row*n+col] - mu, 2.0);
+    }   
+        sigma /= (float)n;
+        sigma = sqrt(float(sigma));
+    // make sure the calculation of standard deviation is completed
+    __syncthreads();
+
+    
+
+    for(row=0;row<n;row++){
+        if(sigma==0.0)
+            d_b[row*n+col]=0.0;
+        else
+        d_b[row*n+col] = (d_a[row*n+col] - mu) / sigma;
+    }
+
+} 
 
 
 int main(int argc, char **argv) {
@@ -207,11 +244,12 @@ int main(int argc, char **argv) {
     dim3 blockSize(1,16);
     dim3 gridSize(N,ceil(N/((float) blockSize.y)));
 
-
+    dim3 blockSize2(16);
+    dim3 gridSize2(ceil(N/((float) blockSize.x)));
     
     /* Matrix Normalization */
     
-    matrixNorm<<<gridSize,blockSize>>>(d_A, d_B, block_sum, col_mu, block_sigma, col_sigma, N);
+    matrixNorm2<<<gridSize2,blockSize2>>>(d_A, d_B, N);
     
     // transfer result from device
     cudaMemcpy(B, d_B, sizeof(float)*N*N, cudaMemcpyDeviceToHost);
