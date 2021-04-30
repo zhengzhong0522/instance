@@ -99,12 +99,12 @@ __global__ void matrixNorm(float *d_a, float *d_b, float* block_sum, float* col_
         if(index<blockDim.y){
             sdata[index] += sdata[index+s];
         }
-        __syncthreads;
+        //__syncthreads;
     }
     if(tid==0){ 
         block_sum[blockIdx.x + blockIdx.y*n] = sdata[0];
     }
-    __syncthreads;
+    //__syncthreads;
 
     // add subsum of blcoks in a column
     if(tid==0 && blockDim.y==0){
@@ -116,12 +116,12 @@ __global__ void matrixNorm(float *d_a, float *d_b, float* block_sum, float* col_
         // store mean for each col; 
         col_mu[blockIdx.x] = mu;
     }
-    __syncthreads;
+    //__syncthreads;
  
     
     // copy data and compute (x-mu)^2 to shared mem for each block
     sdata[tid] = powf(d_a[row*n+col] - col_mu[blockIdx.x], 2.0);
-    __syncthreads;
+    //__syncthreads;
 
     // reduction for each block
     for(s=1; s<blockDim.y; s *= 2) {
@@ -129,14 +129,14 @@ __global__ void matrixNorm(float *d_a, float *d_b, float* block_sum, float* col_
         if(index<blockDim.y){
             sdata[index] += sdata[index+s];
         }
-        __syncthreads;
+        //__syncthreads;
     }
 
     // store sub standard deviation of each block in global mem for further computation
     if(tid==0){
          block_sigma[blockIdx.x + blockIdx.y*n] = sdata[0];
     }
-    __syncthreads;
+    //__syncthreads;
 
     // compute sigam for each col
     if(tid==0 && blockDim.y==0){
@@ -148,7 +148,7 @@ __global__ void matrixNorm(float *d_a, float *d_b, float* block_sum, float* col_
         // store sigma for each col; 
         col_sigma[blockIdx.x] = sigma;
     }
-    __syncthreads;
+    //__syncthreads;
     
     // calculate the normalized value in each thread
     if(col_sigma[blockIdx.x]==0.0)
