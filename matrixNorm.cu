@@ -77,16 +77,16 @@ void matrixNorm() {
 
 __global__ void matrixNorm(float *d_a, float *d_b, int n) {
 
-    // get thread id(col) in the grid
+    // get thread id(col) in the global scope
     int col = blockIdx.x * blockDim.x + threadIdx.x;
-    if(col < n) {
-
-        
-    printf("id:%d\n",col);
+    //printf("id:%d\n",col);
     int mu, sigma, row;
     mu = 0.0;
+    // each threads load one element from global to shared mem.
+    extern __shared__ float sdata[];
+    
     for(row=0;row<n;row++){
-        mu += d_a[row*n + col];
+        mu += d_a[row + col*n];
     }
     mu /= n;
 
@@ -95,9 +95,9 @@ __global__ void matrixNorm(float *d_a, float *d_b, int n) {
 
     sigma = 0.0;
     for (row=0; row < n; row++){
-        sigma += powf(d_a[row*n+col] - mu, 2.0);
+        sigma += powf(d_a[row+col*n] - mu, 2.0);
     }   
-        sigma /= n;
+        sigma /= (float)n;
         sigma = sqrt(float(sigma));
     // make sure the calculation of standard deviation is completed
     __syncthreads();
@@ -105,17 +105,11 @@ __global__ void matrixNorm(float *d_a, float *d_b, int n) {
     
 
     for(row=0;row<n;row++){
-        int c;
-        for(c=0;c<n;c++){
-            if(sigma==0.0)
-                d_b[row*n+c]=0.0;
-            else
-                d_b[row*n+c] = (d_a[row*n+c] - mu) / sigma;
-        }
-        
+        if(sigma==0.0)
+            d_b[row*n+col]=0.0;
+        else
+        d_b[row*n+col] = (d_a[row+col*n] - mu) / sigma;
     }
-
- }
 
 } 
 
@@ -158,9 +152,9 @@ int main(int argc, char **argv) {
     cudaMemcpy((void*)d_A, (void*)A, 4*N*N, cudaMemcpyHostToDevice);
     cudaMemcpy((void*)d_B, (void*)B, 4*N*N, cudaMemcpyHostToDevice);
     
-    // set up dimension of grid and block, 1-dim gird and block
-    dim3 blockSize(16);
-    dim3 gridSize(ceil(N/((float) blockSize.x)));
+    // set up dimension of grid and block, 2-dim gird and block
+    dim3 blockSize(16,16);
+    dim3 gridSize(ceil(N/((float) blockSize.x)),ceil(N/((float) blockSize.y)));
 
 
     
@@ -175,7 +169,7 @@ int main(int argc, char **argv) {
     cudaEventSynchronize(stop);
 
     // compute time elapse on GPU computing
-    float gpu_elapsed_time_ms = 0.2;
+    float gpu_elapsed_time_ms = 0.0;
     cudaEventElapsedTime(&gpu_elapsed_time_ms, start, stop);
     printf("Time elapsed on GPU: %f ms.\n\n", gpu_elapsed_time_ms);
     printf("\nStopped clock.");
