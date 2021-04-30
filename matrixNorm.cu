@@ -153,7 +153,7 @@ int main(int argc, char **argv) {
     cudaMemcpy((void*)d_B, (void*)B, 4*N*N, cudaMemcpyHostToDevice);
     
     // set up dimension of grid and block, 2-dim gird and block
-    dim3 blockSize(16,1);
+    dim3 blockSize(16);
     dim3 gridSize(ceil(N/((float) blockSize.x)));
 
 
