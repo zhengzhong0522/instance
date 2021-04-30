@@ -77,7 +77,7 @@ void matrixNorm() {
 
 __global__ void matrixNorm(float *d_a, float *d_b, float* block_sum, float* col_mu, float* block_sigma, float* col_sigma, int n) {
 
-    printf("hello\n");
+    
     // get thread's position in the global scope
     int col = blockIdx.x * blockDim.x + threadIdx.x;
     int row = blockIdx.y * blockDim.y + threadIdx.y;
@@ -291,7 +291,7 @@ int main(int argc, char **argv) {
     cudaEventElapsedTime(&gpu_elapsed_time_ms, start, stop);
     printf("Time elapsed on GPU: %f ms.\n\n", gpu_elapsed_time_ms);
     printf("\nStopped clock.");
-    print_output2();
+    print_output();
     printf("\n-------------------- CUDA End-------------------------\n");
 
     // free both host and device memory
