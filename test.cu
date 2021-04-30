@@ -276,7 +276,8 @@ int main(int argc, char **argv) {
     
     /* Matrix Normalization */
     
-    matrixNorm2<<<gridSize2,blockSize2>>>(d_A, d_B, N);
+    //matrixNorm2<<<gridSize2,blockSize2>>>(d_A, d_B, N);
+    matrixNorm<<<gridSize, blockSize>>>(d_A,d_B, block_sum,col_mu, block_sigma, col_sigma,N);
     
     // transfer result from device
     cudaMemcpy(B, d_B, sizeof(float)*N*N, cudaMemcpyDeviceToHost);
@@ -297,14 +298,6 @@ int main(int argc, char **argv) {
     free(B);
     cudaFree(d_A);
     cudaFree(d_B);    
-    cudaError_t err = cudaGetLastError();
-
-     if ( err != cudaSuccess )
-     {
-        printf("CUDA Error: %s\n", cudaGetErrorString(err));       
-
-        // Possibly: exit(-1) if program cannot continue....
-     }
     
     exit(0);
 }
