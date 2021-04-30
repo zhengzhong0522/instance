@@ -81,7 +81,7 @@ __global__ void matrixNorm(float *d_a, float *d_b, float* block_sum, float* col_
     int col = blockIdx.x * blockDim.x + threadIdx.x;
     int row = blockIdx.y * blockDim.y + threadIdx.y;
     // get thread's id in a block scope
-    int tid = threadIdx.id;
+    int tid = threadIdx.y;
  
     int mu, sigma;
     mu = 0.0;
@@ -93,8 +93,8 @@ __global__ void matrixNorm(float *d_a, float *d_b, float* block_sum, float* col_
     __syncthreads();
 
     // redction for sum of a colum
-    int s = 0
-    for(s=1;s<blockDim.y; s *= 2) {
+    int s;
+    for(s=1; s<blockDim.y; s *= 2) {
         int index = 2*s*tid;
         if(index<blockDim.y){
             sdata[index] += sdata[index+s];
@@ -120,11 +120,10 @@ __global__ void matrixNorm(float *d_a, float *d_b, float* block_sum, float* col_
  
     
     // copy data and compute (x-mu)^2 to shared mem for each block
-    sdata[id] = powf(d_a[row*n+col] - col_mu[blockIdx.x], 2.0);
+    sdata[tid] = powf(d_a[row*n+col] - col_mu[blockIdx.x], 2.0);
     __syncthreads;
 
     // reduction for each block
-    int s = 0
     for(s=1; s<blockDim.y; s *= 2) {
         int index = 2*s*tid;
         if(index<blockDim.y){
@@ -175,7 +174,7 @@ int main(int argc, char **argv) {
     initialize_inputs();
 
     // allocate device memory
-    float *d_A, *d_B, *block_sum, *col_mu, block_sigma, *col_sigma;
+    float *d_A, *d_B, *block_sum, *col_mu, *block_sigma, *col_sigma;
     cudaMalloc((void**)&d_A, 4*N*N);
     cudaMalloc((void**)&d_B, 4*N*N);
     // total of N*N/16 blocks, so there will be N*N/16 block sum after reduction
