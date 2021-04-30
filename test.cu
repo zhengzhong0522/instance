@@ -224,7 +224,7 @@ int main(int argc, char **argv) {
     cudaEventElapsedTime(&gpu_elapsed_time_ms, start, stop);
     printf("Time elapsed on GPU: %f ms.\n\n", gpu_elapsed_time_ms);
     printf("\nStopped clock.");
-    print_output();
+    print_output2();
     printf("\n-------------------- CUDA End-------------------------\n");
 
         // // free both host and device memory
