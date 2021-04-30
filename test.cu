@@ -39,7 +39,7 @@ void print_output(){
     }
 }
 void print_output2(){
-    printf("\nBB =\n");
+    printf("\nB =\n");
     int row, c;
     for(row=0;row<N;row++){
         for(c=0;c<N;c++){
@@ -210,6 +210,33 @@ int main(int argc, char **argv) {
     
     initialize_inputs();
 
+    // cpu serial computing
+    struct timeval start2, stop2;  /* Elapsed times using gettimeofday() */
+    struct timezone tzdummy;
+    unsigned long long runtime2;
+    
+    /* Start Clock */
+    printf("\n--------------------Serial Start-----------------------\n");
+    printf("Matrix size N = %d", N);
+    printf("\nStarting clock.\n\n");
+    gettimeofday(&start2, &tzdummy);
+    
+    
+    /* Matrix Normalization */
+    matrixNorm();
+    
+    
+    /* Stop Clock */
+    gettimeofday(&stop2, &tzdummy);
+    runtime2 = (unsigned long long)(stop2.tv_sec - start2.tv_sec) * 1000000 + (stop2.tv_usec - start2.tv_usec);
+    
+    
+    /* Display timing results */
+    printf("Runtime on CPU = %g ms.\n", (float)runtime2/(float)1000);
+    printf("\nStopped clock.");
+    print_output2();
+    printf("\n---------------------Serial End---------------------------\n");
+
     // allocate device memory
     float *d_A, *d_B, *block_sum, *col_mu, *block_sigma, *col_sigma;
     cudaMalloc((void**)&d_A, 4*N*N);
@@ -265,40 +292,11 @@ int main(int argc, char **argv) {
     print_output2();
     printf("\n-------------------- CUDA End-------------------------\n");
 
-        // // free both host and device memory
-        free(A);
-        free(B);
-       cudaFree(d_A);
-       cudaFree(d_B);
-       
-       
-
-    // cpu serial computing
-    struct timeval start2, stop2;  /* Elapsed times using gettimeofday() */
-    struct timezone tzdummy;
-    unsigned long long runtime2;
-       /* Start Clock */
-    printf("\n--------------------Serial Start-----------------------\n");
-    printf("Matrix size N = %d", N);
-    printf("\nStarting clock.\n\n");
-    gettimeofday(&start2, &tzdummy);
-    
-    
-    /* Matrix Normalization */
-    matrixNorm();
-    
-    
-    /* Stop Clock */
-    gettimeofday(&stop2, &tzdummy);
-    runtime2 = (unsigned long long)(stop2.tv_sec - start2.tv_sec) * 1000000 + (stop2.tv_usec - start2.tv_usec);
-    
-    
-    /* Display timing results */
-    printf("Runtime on CPU = %g ms.\n", (float)runtime2/(float)1000);
-    printf("\nStopped clock.");
-    print_output2();
-    printf("\n---------------------Serial End---------------------------\n");
-    
+    // free both host and device memory
+    free(A);
+    free(B);
+    cudaFree(d_A);
+    cudaFree(d_B);    
     
     exit(0);
 }
