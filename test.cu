@@ -34,7 +34,7 @@ void print_output(){
     printf("\nB =\n");
     for(r=0;r<N;r++){
         for(c=0;c<N;c++){
-            printf("%5.5f%s", B[r*N+c], (c < N-1) ? ", " : ";\n");
+            printf("%5.2f%s", B[r*N+c], (c < N-1) ? ", " : ";\n");
         }
     }
 }
@@ -43,7 +43,7 @@ void print_output2(){
     int row, c;
     for(row=0;row<N;row++){
         for(c=0;c<N;c++){
-             printf("%5.5f%s", BB[row][c], (c < N-1) ? ", " : ";\n");
+             printf("%5.2f%s", BB[row][c], (c < N-1) ? ", " : ";\n");
         }
     }
 }
@@ -277,8 +277,8 @@ int main(int argc, char **argv) {
     
     /* Matrix Normalization */
     
-    //matrixNorm2<<<gridSize2,blockSize2>>>(d_A, d_B, N);
-    matrixNorm<<<gridSize, blockSize>>>(d_A,d_B, block_sum,col_mu, block_sigma, col_sigma,N);
+    matrixNorm2<<<gridSize2,blockSize2>>>(d_A, d_B, N);
+    //matrixNorm<<<gridSize, blockSize>>>(d_A,d_B, block_sum,col_mu, block_sigma, col_sigma,N);
     
     // transfer result from device
     cudaMemcpy(B, d_B, sizeof(float)*N*N, cudaMemcpyDeviceToHost);
@@ -291,7 +291,7 @@ int main(int argc, char **argv) {
     cudaEventElapsedTime(&gpu_elapsed_time_ms, start, stop);
     printf("Time elapsed on GPU: %f ms.\n\n", gpu_elapsed_time_ms);
     printf("\nStopped clock.");
-    print_output();
+    print_output2();
     printf("\n-------------------- CUDA End-------------------------\n");
 
     // free both host and device memory
