@@ -297,6 +297,14 @@ int main(int argc, char **argv) {
     free(B);
     cudaFree(d_A);
     cudaFree(d_B);    
+    cudaError_t err = cudaGetLastError();
+
+     if ( err != cudaSuccess )
+     {
+        printf("CUDA Error: %s\n", cudaGetErrorString(err));       
+
+        // Possibly: exit(-1) if program cannot continue....
+     }
     
     exit(0);
 }
