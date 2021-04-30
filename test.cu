@@ -77,6 +77,7 @@ void matrixNorm() {
 
 __global__ void matrixNorm(float *d_a, float *d_b, float* block_sum, float* col_mu, float* block_sigma, float* col_sigma, int n) {
 
+    printf("hello\n");
     // get thread's position in the global scope
     int col = blockIdx.x * blockDim.x + threadIdx.x;
     int row = blockIdx.y * blockDim.y + threadIdx.y;
